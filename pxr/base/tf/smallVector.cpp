@@ -21,29 +21,35 @@
 // KIND, either express or implied. See the Apache License for the specific
 // language governing permissions and limitations under the Apache License.
 //
-#include "pxr/pxr.h"
 #include "pxr/base/tf/smallVector.h"
+#include "pxr/base/arch/defines.h"
+#include "pxr/pxr.h"
 
 PXR_NAMESPACE_OPEN_SCOPE
 
-static_assert(
-    sizeof(TfSmallVector<int, 1>) == 16, 
-    "Expecting sizeof(TfSmallVector<int, N = 1>) to be 16 bytes.");
+#ifndef ARCH_BITS_32
+static_assert(sizeof(TfSmallVector<int, 1>) == 16,
+              "Expecting sizeof(TfSmallVector<int, N = 1>) to be 16 bytes.");
+#else
+static_assert(sizeof(TfSmallVector<int, 1>) == 12,
+              "Expecting sizeof(TfSmallVector<int, N = 1>) to be 12 bytes.");
+#endif
 
-static_assert(
-    sizeof(TfSmallVector<int, 2>) == 16, 
-    "Expecting sizeof(TfSmallVector<int, N = 2>) to be 16 bytes.");
+static_assert(sizeof(TfSmallVector<int, 2>) == 16,
+              "Expecting sizeof(TfSmallVector<int, N = 2>) to be 16 bytes.");
 
-static_assert(
-    sizeof(TfSmallVector<double, 1>) == 16, 
-    "Expecting sizeof(TfSmallVector<double, N = 1>) to be 16 bytes.");
+static_assert(sizeof(TfSmallVector<double, 1>) == 16,
+              "Expecting sizeof(TfSmallVector<double, N = 1>) to be 16 bytes.");
 
-static_assert(
-    sizeof(TfSmallVector<double, 2>) == 24, 
-    "Expecting sizeof(TfSmallVector<double, N = 2>) to be 24 bytes.");
+static_assert(sizeof(TfSmallVector<double, 2>) == 24,
+              "Expecting sizeof(TfSmallVector<double, N = 2>) to be 24 bytes.");
 
-static_assert(
-    TfSmallVectorBase::ComputeSerendipitousLocalCapacity<char>() == 8,
-    "Expecting 8 bytes of local capacity.");
+#ifndef ARCH_BITS_32
+static_assert(TfSmallVectorBase::ComputeSerendipitousLocalCapacity<char>() == 8,
+              "Expecting 8 bytes of local capacity.");
+#else
+static_assert(TfSmallVectorBase::ComputeSerendipitousLocalCapacity<char>() == 4,
+              "Expecting 4 bytes of local capacity.");
+#endif
 
 PXR_NAMESPACE_CLOSE_SCOPE

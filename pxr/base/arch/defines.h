@@ -46,7 +46,7 @@
 // Processor
 //
 
-#if defined(i386) || defined(__i386__) || defined(__x86_64__) || \
+#if defined(i386) || defined(__i386__) || defined(__x86_64__) ||               \
     defined(_M_IX86) || defined(_M_X64)
 #define ARCH_CPU_INTEL
 #elif defined(__arm__) || defined(__aarch64__) || defined(_M_ARM)
@@ -60,7 +60,7 @@
 #if defined(__x86_64__) || defined(__aarch64__) || defined(_M_X64)
 #define ARCH_BITS_64
 #else
-#error "Unsupported architecture.  x86_64 or ARM64 required."
+#define ARCH_BITS_32
 #endif
 
 //
@@ -104,4 +104,4 @@
 #define ARCH_HAS_MMAP_MAP_POPULATE
 #endif
 
-#endif // PXR_BASE_ARCH_DEFINES_H 
+#endif // PXR_BASE_ARCH_DEFINES_H

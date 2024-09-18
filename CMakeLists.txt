@@ -2,17 +2,6 @@ cmake_minimum_required(VERSION 3.14)
 
 project(usd)
 
-if (NOT CMAKE_SIZEOF_VOID_P EQUAL 8)
-    if (WIN32)
-        message(FATAL_ERROR "Compiler does not support 64-bit builds. "
-                "If you are using Visual Studio, make sure you are in the "
-                "x64 command prompt and have specified the Win64 cmake "
-                "generator (e.g., -G \"Visual Studio 15 2017 Win64\")")
-    else()
-        message(FATAL_ERROR "Compiler does not support 64-bit builds.")
-    endif()
-endif()
-
 list(APPEND CMAKE_MODULE_PATH
     ${PROJECT_SOURCE_DIR}/cmake/defaults
     ${PROJECT_SOURCE_DIR}/cmake/modules
