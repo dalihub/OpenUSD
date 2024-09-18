@@ -7,19 +7,19 @@ set(DIRS
     pcp
     usd
     usdGeom
-    usdVol
-    usdMedia
+#    usdVol
+#    usdMedia
     usdShade
-    usdLux
-    usdProc
-    usdRender
-    usdHydra
-    usdRi
+#    usdLux
+#    usdProc
+#    usdRender
+#    usdHydra
+#    usdRi
     usdSkel
-    usdUI
-    usdUtils
-    usdPhysics
-    plugin
+#    usdUI
+#    usdUtils
+#    usdPhysics
+#    plugin
 )
 
 foreach(d ${DIRS})
