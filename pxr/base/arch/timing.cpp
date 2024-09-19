@@ -57,13 +57,19 @@ constexpr static T InitializingState = -2;
 static std::atomic<double> 
 Arch_NanosecondsPerTick{UninitializedState<double>};
 
+#if defined(ARCH_BITS_32)
+using IntType = int32_t;
+#else
+using IntType = int64_t;
+#endif // ARCH_BITS_32
+
 // Tick measurement granularity.
-static std::atomic<int64_t> 
-Arch_TickQuantum{UninitializedState<int64_t>};
+static std::atomic<IntType> 
+Arch_TickQuantum{UninitializedState<IntType>};
 
 // Cost to take a measurement with ArchIntervalTimer.
-static std::atomic<int64_t>  
-Arch_IntervalTimerTickOverhead{UninitializedState<int64_t>};
+static std::atomic<IntType>  
+Arch_IntervalTimerTickOverhead{UninitializedState<IntType>};
 
 template <typename T>
 static
@@ -180,7 +186,7 @@ Arch_ComputeNanosecondsPerTick()
 uint64_t testTimeAccum;
 
 static
-int64_t 
+IntType 
 Arch_ComputeTickQuantum()
 {
     constexpr int NumTrials = 64;
@@ -211,7 +217,7 @@ ArchGetTickQuantum()
 }
 
 static
-int64_t
+IntType
 Arch_ComputeIntervalTimerTickOverhead()
 {
     uint64_t *escape = &testTimeAccum;

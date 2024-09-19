@@ -28,6 +28,12 @@
 #include "pxr/usd/sdf/types.h"
 #include "pxr/usd/sdf/assetPath.h"
 
+#include "pxr/base/arch/defines.h"
+
+#ifdef ARCH_BITS_32
+#include <boost/functional/hash.hpp>
+#endif
+
 PXR_NAMESPACE_OPEN_SCOPE
 
 // Register the schema with the TfType system.
@@ -201,10 +207,18 @@ struct _Vec3iHash
 {
     size_t operator()(const GfVec3i& v) const
     {
+#ifdef ARCH_BITS_32
+        size_t h = 0;
+        boost::hash_combine(h, v[0]);
+        boost::hash_combine(h, v[1]);
+        boost::hash_combine(h, v[2]);
+        return h;
+#else
         return
             static_cast<size_t>(v[0]) << 42 ^
             static_cast<size_t>(v[1]) << 21 ^
             static_cast<size_t>(v[2]);
+#endif // ARCH_BITS_32
     }
 };
 
