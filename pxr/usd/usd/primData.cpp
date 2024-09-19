@@ -37,6 +37,8 @@
 #include "pxr/base/tf/exception.h"
 #include "pxr/base/tf/stringUtils.h"
 
+#include "pxr/base/arch/defines.h"
+
 #include <algorithm>
 #include <sstream>
 #include <vector>
@@ -45,8 +47,13 @@ PXR_NAMESPACE_OPEN_SCOPE
 
 // Static assertion on PrimData size.  We want to be warned when its size
 // changes.
+#ifndef ARCH_BITS_32
 static_assert(sizeof(Usd_PrimData) == 64,
               "Expected sizeof(Usd_PrimData) == 64");
+#else
+static_assert(sizeof(Usd_PrimData) == 48,
+              "Expected sizeof(Usd_PrimData) == 48");
+#endif
 
 // Usd_PrimData need to be always initialized with a valid type info pointer
 static const UsdPrimTypeInfo *_GetEmptyPrimTypeInfo() 

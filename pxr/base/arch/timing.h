@@ -49,6 +49,11 @@
 #include <iterator>
 #include <numeric>
 
+#ifdef ARCH_BITS_32
+#include <chrono>
+#include <thread>
+#endif // ARCH_BITS_32
+
 PXR_NAMESPACE_OPEN_SCOPE
 
 /// Return the current time in system-dependent units.
@@ -68,9 +73,15 @@ ArchGetTickTime()
     // On Intel we'll use the rdtsc instruction.
     return __rdtsc();
 #elif defined (ARCH_CPU_ARM)
+#ifdef ARCH_BITS_64
     uint64_t result;
     __asm __volatile("mrs	%0, CNTVCT_EL0" : "=&r" (result));
     return result;
+#else
+    auto epoch = std::chrono::steady_clock::now().time_since_epoch();
+	auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(epoch);
+    return static_cast<uint64_t>(duration.count());
+#endif // ARCH_BITS_64s
 #else
 #error Unknown architecture.
 #endif
@@ -85,7 +96,7 @@ inline uint64_t
 ArchGetStartTickTime()
 {
     uint64_t t;
-#if defined (ARCH_OS_DARWIN)
+#if defined (ARCH_OS_DARWIN) || defined (ARCH_BITS_32)
     return ArchGetTickTime();
 #elif defined (ARCH_CPU_ARM)
     std::atomic_signal_fence(std::memory_order_seq_cst);
@@ -126,7 +137,7 @@ inline uint64_t
 ArchGetStopTickTime()
 {
     uint64_t t;
-#if defined (ARCH_OS_DARWIN)
+#if defined (ARCH_OS_DARWIN) || defined (ARCH_BITS_32)
     return ArchGetTickTime();
 #elif defined (ARCH_CPU_ARM)
     std::atomic_signal_fence(std::memory_order_seq_cst);

@@ -30,12 +30,17 @@
 #include "pxr/pxr.h"
 #include "pxr/usd/ndr/api.h"
 #include "pxr/base/tf/token.h"
+#include "pxr/base/arch/defines.h"
 
 #include <memory>
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
+
+#ifdef ARCH_BITS_32
+#include <boost/functional/hash.hpp>
+#endif // ARCH_BITS_32
 
 PXR_NAMESPACE_OPEN_SCOPE
 
@@ -128,8 +133,15 @@ public:
     NDR_API
     std::size_t GetHash() const
     {
-        return (static_cast<std::size_t>(_major) << 32) +
-                static_cast<std::size_t>(_minor);
+        #ifdef ARCH_BITS_32
+            size_t h = 0;
+            boost::hash_combine(h, _major);
+            boost::hash_combine(h, _minor);
+            return h;
+        #else
+            return (static_cast<std::size_t>(_major) << 32) +
+                    static_cast<std::size_t>(_minor);
+        #endif // ARCH_BITS_32
     }
 
     /// Return true iff the version is valid.

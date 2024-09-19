@@ -60,7 +60,7 @@
 #if defined(__x86_64__) || defined(__aarch64__) || defined(_M_X64)
 #define ARCH_BITS_64
 #else
-#error "Unsupported architecture.  x86_64 or ARM64 required."
+#define ARCH_BITS_32
 #endif
 
 //

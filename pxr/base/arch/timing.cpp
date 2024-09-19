@@ -112,7 +112,7 @@ static
 double
 Arch_ComputeNanosecondsPerTick()
 {
-#if defined(ARCH_CPU_ARM)
+#if defined(ARCH_CPU_ARM) && defined(ARCH_BITS_64)
     uint64_t counter_hz;
     __asm __volatile("mrs	%0, CNTFRQ_EL0" : "=&r" (counter_hz));
     Arch_NanosecondsPerTick = double(1e9) / double(counter_hz);

@@ -39,6 +39,7 @@
 
 #include "pxr/base/arch/attributes.h"
 #include "pxr/base/arch/debugger.h"
+#include "pxr/base/arch/defines.h"
 #include "pxr/base/arch/hash.h"
 #include "pxr/base/arch/inttypes.h"
 #include "pxr/base/arch/mallocHook.h"
@@ -129,8 +130,13 @@ struct Tf_MallocBlockInfo {
 };
 
 #if !defined(ARCH_OS_WINDOWS)
+#ifdef ARCH_BITS_64
 static_assert(sizeof(Tf_MallocBlockInfo) == 16, 
               "Unexpected size for Tf_MallocBlockInfo");
+#else
+static_assert(sizeof(Tf_MallocBlockInfo) == 8,
+              "Unexpected size for Tf_MallocBlockInfo");
+#endif // ARCH_BITS_64
 #endif
 
 /*
